@@ -1,0 +1,11 @@
+{
+    "require": {
+        "naka1205/phpkoa": "^1.8"
+    },
+    "autoload": {
+        "psr-4": {
+            "Controllers\\": "Controllers/",
+            "Models\\": "Models/"
+        }
+    }
+}
