@@ -12,8 +12,21 @@
     <script src="/js/plugins/bootstrap-table-zh-CN.js"></script>
 </head>
 <body>
-<button id="_make" type="button" class="btn btn-primary">制作全景图</button>
-<table id="table"></table>
+    <div class="container">
+        
+        <div class="row">
+            <div class="col-md-8">
+                <h2>数据列表</h2>
+            </div>
+            <div class="col-md-4">
+                <div class="pull-right">
+                    <button id="_make" type="button" class="btn btn-primary" style="margin-top: 20px;">制作全景图</button>
+                </div>
+            </div>
+        </div>
+        <table id="table"></table>
+    </div>
+
 
 <script>
     var tableData = [];
@@ -77,15 +90,14 @@
 
     function deleted(title) {
         $.ajax({
-            url: '/php/Remove.php?key=' + title,
+            url: '/api/deleted?key=' + title,
             type: "GET",
             dataType: "json",
             error: function (error) {
                 console.log(error)
             },
             success: function (data) {
-                console.log(data);
-                window.location = "/main";
+                window.location.reload();
             }
         })
     }

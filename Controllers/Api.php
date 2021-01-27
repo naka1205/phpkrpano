@@ -24,7 +24,14 @@ class Api
 
         $ctx->status = 200;
         $ctx->body = json_encode( $result );
-    }  
+    }
+
+    public static function deleted(Context $ctx, $next){
+        $result = ( yield Vtour::remove($ctx->request->get) );
+
+        $ctx->status = 200;
+        $ctx->body = json_encode( $result );
+    } 
 
     public static function upload(Context $ctx, $next){
         $files = ( yield Vtour::upload($ctx->request->files,$ctx->request->post) );

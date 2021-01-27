@@ -216,13 +216,50 @@ class Vtour
         return $result;
     }
 
+    public static function remove($params){
+        $result = [];
+        $result['status'] = "error";
+        $key = isset($params['key']) ? $params['key'] : '';
+        if (empty($key)) {
+            return $result;
+        }
+
+        $data_path = PUBLIC_PATH . DS ."data" . DS . $key;
+
+        $result['status'] = "success";
+        if (!is_dir($data_path)) {
+            return $result;
+        }
+
+        $result['status'] = self::deldir($data_path) ? "success" : "error";
+        
+        return $result;
+    }
+
+    public static function deldir($path){
+        $dh = opendir($path);
+        while ($file=readdir($dh)) {
+            if($file != "." && $file != "..") {
+                $fullpath = $path . DS . $file;
+                if(!is_dir($fullpath)) {
+                    unlink($fullpath);
+                } else {
+                    self::deldir($fullpath);
+                }
+            }
+        }
+
+        closedir($dh);
+        return rmdir($path);
+    }
+
     public static function add($post){
         if ( IS_WIN ) {
-            $tools = TOOLS_PATH . "/krpanotools64";
+            $tools = TOOLS_PATH . DS . "krpanotools64";
         }else{
-            $tools = TOOLS_PATH . "/krpanotools";
+            $tools = TOOLS_PATH . DS . "krpanotools";
         }
-        $tools .= " makepano -config=" . TOOLS_PATH . "/templates/vtour-normal.config";
+        $tools .= " makepano -config=" . TOOLS_PATH . DS . "templates" . DS . "vtour-normal.config -panotype=sphere ";
         $data_path = PUBLIC_PATH . DS ."data";
 
         $timestamp = $post["timestamp"];
@@ -230,6 +267,7 @@ class Vtour
         $result['status'] = "error";
 
         $file_path = $data_path . DS . $timestamp;
+
         if ( !file_exists($file_path) ) {
             return $result;
         }
@@ -241,8 +279,9 @@ class Vtour
                 $cmd = $cmd . " " . $file_path . DS . $value;
             }
         }
-        exec($cmd, $log, $status);
-    
+
+        $info = exec($cmd, $log, $status);
+
         $src = VTOUR_PATH . DS;
         $dst = $file_path . DS . "vtour";
         if( !is_dir($dst) ){

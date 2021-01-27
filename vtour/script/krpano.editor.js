@@ -79,7 +79,7 @@ $(function () {
     });
 
     $("#mainPage").click(function () {
-        window.location = "/index.html";
+        window.location = "/";
     });
 });
 
